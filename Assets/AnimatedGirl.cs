@@ -3,23 +3,16 @@
 [RequireComponent(typeof(Animator))]
 public class AnimatedGirl : MonoBehaviour
 {
-
-    Animator animator;
+    private Animator _animator;
+    private static readonly int Speed = Animator.StringToHash("Speed");
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
+        _animator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            animator.SetFloat("Speed", 2f);
-        }
-        else
-        {
-            animator.SetFloat("Speed", 0f);
-        }
+        _animator.SetFloat(Speed, Input.GetKey(KeyCode.RightArrow) ? 2f : 0f);
     }
 }
