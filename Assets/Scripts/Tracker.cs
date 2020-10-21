@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
 
-public class TargetCamera : MonoBehaviour
+public class Tracker : MonoBehaviour
 {
     [FormerlySerializedAs("Target")] public GameObject target;
     [FormerlySerializedAs("DeadWindow")] public Vector2 deadWindow;
