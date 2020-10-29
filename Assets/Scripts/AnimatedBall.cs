@@ -8,20 +8,31 @@ using Vector3 = UnityEngine.Vector3;
 [RequireComponent(typeof(Animator))]
 public class AnimatedBall : MonoBehaviour
 {
+    [FormerlySerializedAs("PointPreFab")]
+    public GameObject paf;
     public float Speed = 3;
 
     private DateTime _nextChangeTime = DateTime.Now;
     private Vector3 _orientation = Vector3.right;
-    
-    private void Update()
+    private SpriteRenderer _spriteRenderer;
+    private SpriteRenderer _collisionSpriteRenderer;
+    private void Start()
     {
-        if (_nextChangeTime < DateTime.Now)
-        {
-            _orientation = new Vector3(Random.Range(-1f, 1f), Random.Range(-1f, 1f), 0).normalized;
-            _nextChangeTime = DateTime.Now.AddSeconds(1);
-        }
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
 
-        transform.position += _orientation * (Speed * Time.deltaTime);
-        transform.localEulerAngles = new Vector3(0, 0, Mathf.Atan2(_orientation.y, _orientation.x));
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (!collision.gameObject.CompareTag("Player")) return;
+        var pafInstance = Instantiate(paf);
+        pafInstance.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+        _collisionSpriteRenderer = collision.gameObject.GetComponent<SpriteRenderer>();
+        _spriteRenderer.color = _collisionSpriteRenderer.color;
+    }
+
+    private void OnTriggerEnter2D(Collider2D trigger)
+    {
+        if (!trigger.gameObject.CompareTag("Goal")) return;
+        ScoreManager.instance.blueTeamScore++;
     }
 }
